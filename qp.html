@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPS Study Guide — ES-CS201</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #1a1e2a;
+    --border: #2a2f3e;
+    --accent1: #4fffb0;
+    --accent2: #7b8cff;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --accent5: #06d6a0;
+    --text: #e8ecf4;
+    --muted: #7a82a0;
+    --code-bg: #0a0c12;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(13,15,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 56px;
+    overflow-x: auto;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--accent1);
+    white-space: nowrap;
+    margin-right: 2rem;
+    letter-spacing: -0.5px;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .nav-tab {
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--muted);
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+  }
+  .nav-tab:hover { color: var(--text); background: var(--border); }
+  .nav-tab.active { color: var(--bg); background: var(--accent1); font-weight: 600; }
+
+  /* MAIN */
+  main { padding-top: 56px; }
+
+  /* SECTIONS */
+  .section {
+    display: none;
+    min-height: calc(100vh - 56px);
+    padding: 2.5rem 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+    animation: fadeIn 0.3s ease;
+  }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 3rem 0 2rem;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(75, 255, 176, 0.12);
+    border: 1px solid rgba(75,255,176,0.3);
+    color: var(--accent1);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.25rem;
+    font-family: 'Syne', sans-serif;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+  }
+  .hero h1 span { color: var(--accent1); }
+  .hero p { color: var(--muted); margin-top: 0.75rem; font-size: 1rem; }
+
+  /* TOPIC GRID */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .topic-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .topic-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+  .topic-card:hover { transform: translateY(-3px); border-color: var(--accent1); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+  .topic-card .tc-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+  .topic-card .tc-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .topic-card .tc-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+  .topic-card .tc-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* CONTENT CARDS */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.5rem;
+  }
+  .section-title span { color: var(--accent1); }
+  .section-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .card-icon { font-size: 1.4rem; }
+  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; }
+
+  /* CODE */
+  pre, code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    line-height: 1.7;
+  }
+  .kw { color: #7b8cff; }
+  .fn { color: #4fffb0; }
+  .num { color: #ffd166; }
+  .str { color: #ff6b6b; }
+  .cmt { color: #4a5070; font-style: italic; }
+  .type { color: #06d6a0; }
+
+  /* ALGORITHM STEPS */
+  .algo-steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+  }
+  .algo-steps li {
+    counter-increment: step;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .algo-steps li:last-child { border-bottom: none; }
+  .algo-steps li::before {
+    content: counter(step);
+    background: var(--accent2);
+    color: var(--bg);
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* COMPARISON TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th {
+    background: var(--code-bg);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--accent1);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .yes { color: var(--accent1); font-weight: 600; }
+  .no { color: var(--accent3); font-weight: 600; }
+
+  /* POINT LIST */
+  .points {
+    list-style: none;
+    padding: 0;
+  }
+  .points li {
+    padding: 0.45rem 0;
+    padding-left: 1.25rem;
+    position: relative;
+    font-size: 0.875rem;
+    color: var(--text);
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .points li:last-child { border-bottom: none; }
+  .points li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent1);
+    font-size: 0.7rem;
+    top: 0.5rem;
+  }
+
+  /* MCQ */
+  .mcq-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .mcq-q {
+    font-weight: 500;
+    margin-bottom: 0.85rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .mcq-q .qnum {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent4);
+    font-weight: 700;
+    margin-right: 0.4rem;
+    font-size: 0.82rem;
+  }
+  .mcq-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+    margin-bottom: 0.85rem;
+  }
+  .mcq-opt {
+    padding: 0.45rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--muted);
+  }
+  .mcq-opt:hover { border-color: var(--accent2); color: var(--text); }
+  .mcq-opt.correct { background: rgba(75,255,176,0.12); border-color: var(--accent1); color: var(--accent1); font-weight: 600; }
+  .mcq-opt.wrong { background: rgba(255,107,107,0.12); border-color: var(--accent3); color: var(--accent3); }
+  .mcq-reason {
+    font-size: 0.78rem;
+    color: var(--muted);
+    padding: 0.6rem 0.85rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 7px;
+    border-left: 3px solid var(--accent1);
+    display: none;
+  }
+  .mcq-reason.show { display: block; }
+  .mcq-reason strong { color: var(--accent1); }
+
+  /* MCQ FILTER */
+  .filter-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .filter-btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--accent2); color: var(--text); }
+  .filter-btn.active { background: var(--accent2); border-color: var(--accent2); color: var(--bg); font-weight: 700; }
+
+  /* SCORE BOX */
+  .score-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+  }
+  .score-num { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--accent1); }
+
+  /* FLOWCHART */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 1.5rem 0;
+  }
+  .fc-box {
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+    min-width: 160px;
+  }
+  .fc-oval { background: var(--accent2); color: var(--bg); border-radius: 50px; }
+  .fc-rect { background: var(--card); border: 2px solid var(--border); color: var(--text); }
+  .fc-diamond {
+    transform: rotate(45deg);
+    width: 130px;
+    height: 130px;
+    background: var(--card);
+    border: 2px solid var(--accent4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem 0;
+  }
+  .fc-diamond-text {
+    transform: rotate(-45deg);
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent4);
+    text-align: center;
+  }
+  .fc-arrow {
+    width: 2px;
+    height: 28px;
+    background: var(--border);
+    position: relative;
+  }
+  .fc-arrow::after {
+    content: '▼';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+  .fc-branch {
+    display: flex;
+    align-items: flex-start;
+    gap: 3rem;
+    position: relative;
+    margin: 0.5rem 0;
+  }
+  .fc-branch-col { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+  .fc-label { font-size: 0.7rem; font-weight: 700; color: var(--muted); font-family: 'Syne', sans-serif; }
+  .fc-output { background: rgba(75,255,176,0.15); border: 1px solid var(--accent1); color: var(--accent1); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .fc-output.odd { background: rgba(255,107,107,0.15); border-color: var(--accent3); color: var(--accent3); }
+
+  /* INFO GRID */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 600px) {
+    .info-grid, .mcq-options { grid-template-columns: 1fr; }
+    .fc-branch { gap: 1.5rem; }
+  }
+  .info-tile {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .info-tile-head {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* HIGHLIGHT */
+  .hl { color: var(--accent1); font-weight: 600; }
+  .hl2 { color: var(--accent2); font-weight: 600; }
+  .hl3 { color: var(--accent4); font-weight: 600; }
+  .hl4 { color: var(--accent3); font-weight: 600; }
+
+  /* RULE BOX */
+  .rule-box {
+    background: rgba(75,255,176,0.06);
+    border: 1px solid rgba(75,255,176,0.25);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+  }
+  .rule-box .rule-title { color: var(--accent1); font-weight: 700; font-family: 'Syne', sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  /* SERIES VISUAL */
+  .series-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--code-bg);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin: 0.75rem 0;
+  }
+  .series-num {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: all 0.3s;
+  }
+  .series-num.highlight { background: rgba(75,255,176,0.2); border-color: var(--accent1); color: var(--accent1); }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.3px;
+  }
+  .badge-green { background: rgba(75,255,176,0.15); color: var(--accent1); }
+  .badge-blue { background: rgba(123,140,255,0.15); color: var(--accent2); }
+  .badge-red { background: rgba(255,107,107,0.15); color: var(--accent3); }
+  .badge-yellow { background: rgba(255,209,102,0.15); color: var(--accent4); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">PPS — ES‑CS201</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('home')">🏠 Home</button>
+    <button class="nav-tab" onclick="showSection('fibonacci')">🔢 Fibonacci</button>
+    <button class="nav-tab" onclick="showSection('loops')">🔁 Loops</button>
+    <button class="nav-tab" onclick="showSection('ternary')">❓ Ternary</button>
+    <button class="nav-tab" onclick="showSection('reverse')">🔄 Reverse</button>
+    <button class="nav-tab" onclick="showSection('flowchart')">📊 Flowchart</button>
+    <button class="nav-tab" onclick="showSection('hardware')">💾 Hardware</button>
+    <button class="nav-tab" onclick="showSection('mcqs')">📝 MCQs</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- HOME -->
+<div class="section active" id="home">
+  <div class="hero">
+    <div class="hero-badge">Study Guide</div>
+    <h1>Programming for<br><span>Problem Solving</span></h1>
+    <p>ES-CS201 · CA3 Recap · Click any topic to begin</p>
+  </div>
+  <div class="topic-grid">
+    <div class="topic-card" onclick="showSection('fibonacci')" style="--c:var(--accent1)">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent1);border-radius:12px 12px 0 0;"></div>
+      <div class="tc-icon">🔢</div>
+      <div class="tc-title">Fibonacci Series</div>
+      <div class="tc-desc">Generate n-term series using loops with step-by-step working & algorithm.</div>
+      <div class="tc-tag badge badge-green">for loop · sequence</div>
+    </div>
+    <div class="topic-card" onclick="showSection('loops')">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent2);border-radius:12px 12px 0 0;"></div>
+      <div class="tc-icon">🔁</div>
+      <div class="tc-title">Loop Comparison</div>
+      <div class="tc-desc">Compare for, while, do-while with syntax, examples, and a full comparison table.</div>
+      <div class="tc-tag badge badge-blue">for · while · do-while</div>
+    </div>
+    <div class="topic-card" onclick="showSection('ternary')">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent4);border-radius:12px 12px 0 0;"></div>
+      <div class="tc-icon">❓</div>
+      <div class="tc-title">Ternary Operator</div>
+      <div class="tc-desc">Short-form conditional operator — syntax, working, and example explained clearly.</div>
+      <div class="tc-tag badge badge-yellow">? : · if-else shorthand</div>
+    </div>
+    <div class="topic-card" onclick="showSection('reverse')">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent3);border-radius:12px 12px 0 0;"></div>
+      <div class="tc-icon">🔄</div>
+      <div class="tc-title">Reverse a Number</div>
+      <div class="tc-desc">Extract digits one by one using % and / operators to build the reversed number.</div>
+      <div class="tc-tag badge badge-red">while loop · modulus</div>
+    </div>
+    <div class="topic-card" onclick="showSection('flowchart')">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent5);border-radius:12px 12px 0 0;"></div>
+      <div class="tc-icon">📊</div>
+      <div class="tc-title">Even / Odd Flowchart</div>
+      <div class="tc-desc">Visual flowchart with explanation of how n%2==0 determines even or odd.</div>
+      <div class="tc-tag badge badge-green">flowchart · modulus</div>
+    </div>
+    <div class="topic-card" onclick="showSection('hardware')">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent4);border-radius:12px 12px 0 0;"></div>
+      <div class="tc-icon">💾</div>
+      <div class="tc-title">Computer Hardware</div>
+      <div class="tc-desc">CPU, RAM, ROM, Hard Disk + volatile vs non-volatile memory distinctions.</div>
+      <div class="tc-tag badge badge-yellow">hardware · memory</div>
+    </div>
+    <div class="topic-card" onclick="showSection('mcqs')" style="grid-column: 1/-1">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));border-radius:12px 12px 0 0;"></div>
+      <div class="tc-icon">📝</div>
+      <div class="tc-title">Practice MCQs — All Topics</div>
+      <div class="tc-desc">30 MCQs across variable names, memory types, and increment/decrement operators. Click to reveal answers and explanations.</div>
+      <div class="tc-tag badge badge-blue">variables · memory · operators</div>
+    </div>
+  </div>
+</div>
+
+<!-- FIBONACCI -->
+<div class="section" id="fibonacci">
+  <div class="section-title">🔢 Fibonacci <span>Series</span></div>
+  <div class="section-sub">Generate n terms where each term = sum of previous two</div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💡</div><div class="card-title">What is Fibonacci?</div></div>
+    <ul class="points">
+      <li>Each new term = sum of the previous two terms</li>
+      <li>The series starts with <span class="hl">0</span> and <span class="hl">1</span></li>
+      <li>Example: <span class="hl">0, 1, 1, 2, 3, 5, 8, 13, ...</span></li>
+    </ul>
+    <div class="series-display" id="fib-display"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💻</div><div class="card-title">C Program</div></div>
+<pre><span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="type">int</span> <span class="fn">main</span>()
+{
+    <span class="type">int</span> n, i, a = <span class="num">0</span>, b = <span class="num">1</span>, c;
+    <span class="fn">printf</span>(<span class="str">"Enter the value of n: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+    <span class="fn">printf</span>(<span class="str">"Fibonacci Series: "</span>);
+    <span class="kw">for</span>(i = <span class="num">1</span>; i &lt;= n; i++)
+    {
+        <span class="fn">printf</span>(<span class="str">"%d "</span>, a);  <span class="cmt">// print current term</span>
+        c = a + b;              <span class="cmt">// next = prev1 + prev2</span>
+        a = b;                  <span class="cmt">// slide forward</span>
+        b = c;
+    }
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+    <div class="rule-box">
+      <div class="rule-title">Key Variables</div>
+      <ul class="points" style="margin-top:0.5rem">
+        <li><code>a = 0</code> — first Fibonacci term</li>
+        <li><code>b = 1</code> — second Fibonacci term</li>
+        <li><code>c = a + b</code> — calculates the next term</li>
+        <li>After each step: <code>a = b</code> and <code>b = c</code> to move forward</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">📋</div><div class="card-title">Step-by-Step Working (n = 7)</div></div>
+    <table>
+      <tr><th>Iteration</th><th>a (print)</th><th>b</th><th>c = a+b</th></tr>
+      <tr><td>1</td><td class="hl">0</td><td>1</td><td>1</td></tr>
+      <tr><td>2</td><td class="hl">1</td><td>1</td><td>2</td></tr>
+      <tr><td>3</td><td class="hl">1</td><td>2</td><td>3</td></tr>
+      <tr><td>4</td><td class="hl">2</td><td>3</td><td>5</td></tr>
+      <tr><td>5</td><td class="hl">3</td><td>5</td><td>8</td></tr>
+      <tr><td>6</td><td class="hl">5</td><td>8</td><td>13</td></tr>
+      <tr><td>7</td><td class="hl">8</td><td>13</td><td>21</td></tr>
+    </table>
+    <div style="margin-top:0.75rem; padding:0.6rem 1rem; background:var(--code-bg); border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--accent1);">
+      Output: 0 1 1 2 3 5 8
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">📐</div><div class="card-title">Algorithm</div></div>
+    <ol class="algo-steps">
+      <li>Start</li>
+      <li>Read n</li>
+      <li>Set <code>a = 0</code>, <code>b = 1</code></li>
+      <li>Repeat from i = 1 to n</li>
+      <li>Print a</li>
+      <li>Compute <code>c = a + b</code></li>
+      <li>Update <code>a = b</code> and <code>b = c</code></li>
+      <li>Stop</li>
+    </ol>
+  </div>
+</div>
+
+<!-- LOOPS -->
+<div class="section" id="loops">
+  <div class="section-title">🔁 Loop <span>Comparison</span></div>
+  <div class="section-sub">for · while · do-while — syntax, examples, and differences</div>
+
+  <div class="info-grid">
+    <div class="info-tile">
+      <div class="info-tile-head"><div class="dot" style="background:var(--accent1)"></div>for loop</div>
+      <ul class="points">
+        <li>Best when <span class="hl">number of iterations is known</span></li>
+        <li>Init, condition, update all in one line</li>
+        <li>Entry-controlled — condition checked first</li>
+        <li>May execute zero times</li>
+      </ul>
+<pre style="margin-top:0.75rem;"><span class="kw">for</span>(init; condition; update)
+{
+    statements;
+}</pre>
+    </div>
+    <div class="info-tile">
+      <div class="info-tile-head"><div class="dot" style="background:var(--accent2)"></div>while loop</div>
+      <ul class="points">
+        <li>Best when <span class="hl2">iterations are not fixed</span></li>
+        <li>Condition checked before body executes</li>
+        <li>Entry-controlled loop</li>
+        <li>May execute zero times</li>
+      </ul>
+<pre style="margin-top:0.75rem;"><span class="kw">while</span>(condition)
+{
+    statements;
+}</pre>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-header"><div class="card-icon">🔵</div><div class="card-title">do-while loop</div></div>
+    <ul class="points">
+      <li>Condition is checked <span class="hl">after</span> the body — exit-controlled</li>
+      <li>Runs <span class="hl">at least once</span> even if condition is false initially</li>
+      <li>Use when the code must execute at least one time</li>
+    </ul>
+<pre style="margin-top:0.75rem;"><span class="kw">do</span>
+{
+    statements;
+}
+<span class="kw">while</span>(condition);</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">📊</div><div class="card-title">Comparison Table</div></div>
+    <table>
+      <tr><th>Feature</th><th>for</th><th>while</th><th>do-while</th></tr>
+      <tr>
+        <td>Condition checking</td>
+        <td>Before body</td><td>Before body</td><td><span class="hl">After body</span></td>
+      </tr>
+      <tr>
+        <td>Type</td>
+        <td>Entry-controlled</td><td>Entry-controlled</td><td><span class="hl">Exit-controlled</span></td>
+      </tr>
+      <tr>
+        <td>Minimum executions</td>
+        <td class="no">Zero</td><td class="no">Zero</td><td class="yes">At least 1</td>
+      </tr>
+      <tr>
+        <td>Best use</td>
+        <td>Fixed repetitions</td><td>Unknown repetitions</td><td>Must run once</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💻</div><div class="card-title">All Three — Printing 1 to 5</div></div>
+<pre><span class="cmt">// for loop</span>
+<span class="kw">for</span>(<span class="type">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">5</span>; i++)
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+
+<span class="cmt">// while loop</span>
+<span class="type">int</span> i = <span class="num">1</span>;
+<span class="kw">while</span>(i &lt;= <span class="num">5</span>)  { <span class="fn">printf</span>(<span class="str">"%d "</span>, i); i++; }
+
+<span class="cmt">// do-while loop</span>
+<span class="type">int</span> i = <span class="num">1</span>;
+<span class="kw">do</span>  { <span class="fn">printf</span>(<span class="str">"%d "</span>, i); i++; }
+<span class="kw">while</span>(i &lt;= <span class="num">5</span>);
+
+<span class="cmt">// All produce: 1 2 3 4 5</span></pre>
+  </div>
+</div>
+
+<!-- TERNARY -->
+<div class="section" id="ternary">
+  <div class="section-title">❓ Ternary <span>Operator</span></div>
+  <div class="section-sub">A compact conditional — short form of if-else</div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💡</div><div class="card-title">What is it?</div></div>
+    <ul class="points">
+      <li>Called <span class="hl">ternary</span> because it takes <span class="hl">three operands</span></li>
+      <li>Acts as a compact replacement for a simple <code>if-else</code></li>
+      <li>Makes programs shorter and more readable for simple decisions</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">📐</div><div class="card-title">Syntax & Working</div></div>
+<pre><span class="cmt">// Syntax</span>
+condition ? expression1 : expression2;
+
+<span class="cmt">// If condition is TRUE  → expression1 executes</span>
+<span class="cmt">// If condition is FALSE → expression2 executes</span></pre>
+    <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; font-size:0.85rem;">
+      <div style="padding:0.5rem 0.85rem; background:rgba(75,255,176,0.1); border:1px solid var(--accent1); border-radius:8px; font-family:'JetBrains Mono',monospace;">condition</div>
+      <div style="font-size:1.2rem; color:var(--muted)">→</div>
+      <div style="padding:0.5rem 0.85rem; background:rgba(123,140,255,0.1); border:1px solid var(--accent2); border-radius:8px; font-family:'JetBrains Mono',monospace; color:var(--accent1);">TRUE → expr1</div>
+      <div style="font-size:1.2rem; color:var(--muted)">|</div>
+      <div style="padding:0.5rem 0.85rem; background:rgba(255,107,107,0.1); border:1px solid var(--accent3); border-radius:8px; font-family:'JetBrains Mono',monospace; color:var(--accent3);">FALSE → expr2</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💻</div><div class="card-title">Example — Find Maximum</div></div>
+<pre><span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="type">int</span> <span class="fn">main</span>()
+{
+    <span class="type">int</span> a = <span class="num">10</span>, b = <span class="num">20</span>, max;
+    max = (a &gt; b) ? a : b;  <span class="cmt">// a>b is FALSE, so b=20 assigned</span>
+    <span class="fn">printf</span>(<span class="str">"Maximum = %d"</span>, max);
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+<span class="cmt">// Output: Maximum = 20</span></pre>
+
+    <div class="rule-box">
+      <div class="rule-title">Trace</div>
+      <ul class="points" style="margin-top:0.4rem">
+        <li>Condition: <code>(a &gt; b)</code> → <code>(10 &gt; 20)</code> → <span class="hl4">FALSE</span></li>
+        <li>Since FALSE → expression2 (<code>b</code>) is evaluated</li>
+        <li>Result: <code>max = 20</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">⚖️</div><div class="card-title">Ternary vs if-else</div></div>
+    <table>
+      <tr><th>Ternary</th><th>if-else equivalent</th></tr>
+      <tr>
+        <td><code>max = (a&gt;b) ? a : b;</code></td>
+        <td><code>if(a&gt;b) max=a;<br>else max=b;</code></td>
+      </tr>
+    </table>
+    <ul class="points" style="margin-top:0.75rem">
+      <li>Ternary is more concise — fits in one line</li>
+      <li>Best for <span class="hl">simple 2-choice</span> decisions only</li>
+      <li>Avoid nesting ternary operators — reduces readability</li>
+    </ul>
+  </div>
+</div>
+
+<!-- REVERSE -->
+<div class="section" id="reverse">
+  <div class="section-title">🔄 Reverse a <span>Number</span></div>
+  <div class="section-sub">Extract digits one by one using % and / to build the reverse</div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💡</div><div class="card-title">Core Idea</div></div>
+    <ul class="points">
+      <li><code>num % 10</code> → gives the <span class="hl">last digit</span></li>
+      <li><code>rev = rev * 10 + rem</code> → appends digit to reverse</li>
+      <li><code>num / 10</code> → <span class="hl">removes</span> the last digit</li>
+      <li>Repeat until <code>num == 0</code></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💻</div><div class="card-title">C Program</div></div>
+<pre><span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="type">int</span> <span class="fn">main</span>()
+{
+    <span class="type">int</span> num, temp, rem, rev = <span class="num">0</span>;
+    <span class="fn">printf</span>(<span class="str">"Enter a number: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;num);
+    temp = num;
+    <span class="kw">while</span>(temp != <span class="num">0</span>)
+    {
+        rem = temp % <span class="num">10</span>;        <span class="cmt">// extract last digit</span>
+        rev = rev * <span class="num">10</span> + rem;   <span class="cmt">// build reverse</span>
+        temp = temp / <span class="num">10</span>;       <span class="cmt">// remove last digit</span>
+    }
+    <span class="fn">printf</span>(<span class="str">"Reverse = %d"</span>, rev);
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">📋</div><div class="card-title">Step-by-Step — Input: 1234</div></div>
+    <table>
+      <tr><th>temp</th><th>rem = temp%10</th><th>rev = rev×10+rem</th><th>temp = temp/10</th></tr>
+      <tr><td>1234</td><td class="hl">4</td><td>0×10+4 = <span class="hl">4</span></td><td>123</td></tr>
+      <tr><td>123</td><td class="hl">3</td><td>4×10+3 = <span class="hl">43</span></td><td>12</td></tr>
+      <tr><td>12</td><td class="hl">2</td><td>43×10+2 = <span class="hl">432</span></td><td>1</td></tr>
+      <tr><td>1</td><td class="hl">1</td><td>432×10+1 = <span class="hl">4321</span></td><td>0 → stop</td></tr>
+    </table>
+    <div style="margin-top:0.75rem; padding:0.6rem 1rem; background:var(--code-bg); border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--accent1);">
+      Output: Reverse = 4321
+    </div>
+  </div>
+</div>
+
+<!-- FLOWCHART -->
+<div class="section" id="flowchart">
+  <div class="section-title">📊 Even / Odd <span>Flowchart</span></div>
+  <div class="section-sub">Visual representation of checking even or odd using n%2</div>
+
+  <div class="card">
+    <div class="flowchart">
+      <div class="fc-box fc-oval">START</div>
+      <div class="fc-arrow"></div>
+      <div class="fc-box fc-rect">READ / INPUT N</div>
+      <div class="fc-arrow"></div>
+      <div class="fc-diamond">
+        <div class="fc-diamond-text">N MOD 2 = 0 ?</div>
+      </div>
+      <div style="display:flex; gap:4rem; align-items:flex-start; margin: 0.5rem 0;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+          <div class="fc-label">YES</div>
+          <div class="fc-arrow"></div>
+          <div class="fc-output">PRINT "EVEN"</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+          <div class="fc-label">NO</div>
+          <div class="fc-arrow"></div>
+          <div class="fc-output odd">PRINT "ODD"</div>
+        </div>
+      </div>
+      <div class="fc-arrow"></div>
+      <div class="fc-box fc-oval">STOP</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">📋</div><div class="card-title">Explanation</div></div>
+    <ol class="algo-steps">
+      <li>Start the program</li>
+      <li>Read the number n from the user</li>
+      <li>Check condition: <code>n % 2 == 0</code></li>
+      <li>If <span class="yes">YES</span>: print <span class="hl">EVEN</span></li>
+      <li>If <span class="no">NO</span>: print <span class="hl4">ODD</span></li>
+      <li>Stop the program</li>
+    </ol>
+    <div class="info-grid" style="margin-top:1rem">
+      <div style="padding:0.75rem; background:rgba(75,255,176,0.08); border:1px solid var(--accent1); border-radius:10px; font-size:0.82rem;">
+        <div style="font-weight:700; color:var(--accent1); margin-bottom:0.4rem;">n = 8 (Even)</div>
+        8 % 2 = <span class="hl">0</span> → Condition TRUE → <span class="hl">EVEN</span>
+      </div>
+      <div style="padding:0.75rem; background:rgba(255,107,107,0.08); border:1px solid var(--accent3); border-radius:10px; font-size:0.82rem;">
+        <div style="font-weight:700; color:var(--accent3); margin-bottom:0.4rem;">n = 7 (Odd)</div>
+        7 % 2 = <span class="hl4">1</span> → Condition FALSE → <span class="hl4">ODD</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HARDWARE -->
+<div class="section" id="hardware">
+  <div class="section-title">💾 Computer <span>Hardware</span></div>
+  <div class="section-sub">CPU · RAM · ROM · Hard Disk · Volatile vs Non-volatile</div>
+
+  <div class="info-grid">
+    <div class="info-tile">
+      <div class="info-tile-head"><div class="dot" style="background:#ff6b6b"></div>CPU</div>
+      <ul class="points">
+        <li><span class="hl4">Brain</span> of the computer</li>
+        <li>Performs all calculations and logical operations</li>
+        <li>Controls and coordinates all other parts</li>
+      </ul>
+    </div>
+    <div class="info-tile">
+      <div class="info-tile-head"><div class="dot" style="background:var(--accent2)"></div>RAM</div>
+      <ul class="points">
+        <li><span class="hl2">Primary / working memory</span></li>
+        <li>Stores data temporarily while processing</li>
+        <li><span class="hl4">Volatile</span> — data lost when power off</li>
+      </ul>
+    </div>
+    <div class="info-tile">
+      <div class="info-tile-head"><div class="dot" style="background:var(--accent1)"></div>ROM</div>
+      <ul class="points">
+        <li>Stores permanent <span class="hl">startup / boot instructions</span></li>
+        <li><span class="hl">Non-volatile</span> — retains data without power</li>
+        <li>Read-only — cannot be easily modified</li>
+      </ul>
+    </div>
+    <div class="info-tile">
+      <div class="info-tile-head"><div class="dot" style="background:var(--accent4)"></div>Hard Disk</div>
+      <ul class="points">
+        <li>Secondary storage for <span class="hl3">permanent data</span></li>
+        <li>Stores OS, programs, files, documents</li>
+        <li>Non-volatile — data persists after shutdown</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.25rem;">
+    <div class="card-header"><div class="card-icon">⚡</div><div class="card-title">Volatile vs Non-Volatile Memory</div></div>
+    <table>
+      <tr><th>Feature</th><th>Volatile</th><th>Non-Volatile</th></tr>
+      <tr><td>Data on power off</td><td class="hl4">Lost</td><td class="yes">Retained</td></tr>
+      <tr><td>Examples</td><td>RAM, Cache, Registers</td><td>ROM, Hard Disk, SSD, CD</td></tr>
+      <tr><td>Use</td><td>Temporary working storage</td><td>Permanent data storage</td></tr>
+      <tr><td>Speed</td><td class="yes">Faster</td><td>Relatively slower</td></tr>
+    </table>
+  </div>
+
+  <div class="rule-box">
+    <div class="rule-title">Quick Summary</div>
+    <ul class="points" style="margin-top:0.5rem">
+      <li><span class="hl4">CPU</span> — processes data</li>
+      <li><span class="hl2">RAM</span> — stores data temporarily (volatile)</li>
+      <li><span class="hl">ROM</span> — stores fixed boot instructions (non-volatile)</li>
+      <li><span class="hl3">Hard Disk</span> — stores everything permanently (non-volatile)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- MCQs -->
+<div class="section" id="mcqs">
+  <div class="section-title">📝 Practice <span>MCQs</span></div>
+  <div class="section-sub">Click an option to check your answer. Explanation appears instantly.</div>
+
+  <div class="score-box">
+    <div>
+      <div class="score-num" id="score-display">0 / 0</div>
+      <div style="font-size:0.78rem; color:var(--muted)">answered correctly</div>
+    </div>
+    <div style="flex:1"></div>
+    <button onclick="resetMCQs()" style="padding:0.4rem 0.85rem; background:var(--border); border:none; border-radius:7px; color:var(--text); cursor:pointer; font-size:0.8rem; font-weight:600;">Reset All</button>
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterMCQ('all', this)">All (30)</button>
+    <button class="filter-btn" onclick="filterMCQ('variables', this)">Variable Names</button>
+    <button class="filter-btn" onclick="filterMCQ('memory', this)">Memory</button>
+    <button class="filter-btn" onclick="filterMCQ('operators', this)">Increment/Decrement</button>
+    <button class="filter-btn" onclick="filterMCQ('misc', this)">Misc</button>
+  </div>
+
+  <div id="mcq-container"></div>
+</div>
+
+</main>
+
+<script>
+// NAV
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const map = {home:0,fibonacci:1,loops:2,ternary:3,reverse:4,flowchart:5,hardware:6,mcqs:7};
+  if (map[id] !== undefined) tabs[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// FIBONACCI DISPLAY
+const fibNums = [0,1,1,2,3,5,8];
+const fibDiv = document.getElementById('fib-display');
+fibNums.forEach((n, i) => {
+  const el = document.createElement('div');
+  el.className = 'series-num' + (i >= 2 ? ' highlight' : '');
+  el.textContent = n;
+  fibDiv.appendChild(el);
+});
+
+// MCQ DATA
+const mcqData = [
+  // Variable names
+  {cat:'variables', q:'Which of the following is a valid variable name in C?', opts:['2name','name_2','int','my name'], ans:1, reason:'name_2 starts with a letter and contains only allowed characters (letters, digits, underscore).'},
+  {cat:'variables', q:'Which of the following is invalid as a variable name?', opts:['total','_sum','9value','marks1'], ans:2, reason:'A variable name cannot start with a digit. 9value begins with 9.'},
+  {cat:'variables', q:'Which one is a valid variable name?', opts:['student_name','student-name','student name','student@name'], ans:0, reason:'Underscore is allowed. Hyphens (-), spaces, and @ are not valid in variable names.'},
+  {cat:'variables', q:'Which of the following is invalid because it is a keyword?', opts:['count','float','value','result'], ans:1, reason:'float is a reserved keyword in C and cannot be used as a variable name.'},
+  {cat:'variables', q:'Which variable name follows C naming rules?', opts:['first number','first_number','1stnumber','first-number'], ans:1, reason:'first_number uses only valid characters and does not start with a digit.'},
+  {cat:'variables', q:'Which of the following is not allowed in a variable name?', opts:['Letters','Digits','Underscore','Space'], ans:3, reason:'Variable names in C cannot contain spaces.'},
+  {cat:'variables', q:'Which one is valid?', opts:['_temp','#temp','temp!','temp value'], ans:0, reason:'A variable can start with an underscore. _temp is perfectly valid.'},
+  {cat:'variables', q:'Which of the following is invalid in C?', opts:['age','Age1','1Age','_Age'], ans:2, reason:'1Age starts with a digit, which is not allowed in C variable names.'},
+  {cat:'variables', q:'Which variable name is valid?', opts:['sum_total','sum-total','sum total','sum.total'], ans:0, reason:'Underscore is valid in variable names. Hyphens, spaces, and dots are not.'},
+  {cat:'variables', q:'Which of these cannot be used as a variable name?', opts:['main1','totalMarks','for','value'], ans:2, reason:'for is a reserved keyword in C and cannot be used as a variable name.'},
+  // Memory
+  {cat:'memory', q:'Which memory loses its contents when power is turned off?', opts:['ROM','Hard Disk','RAM','SSD'], ans:2, reason:'RAM is volatile memory — its contents are lost when power is removed.'},
+  {cat:'memory', q:'Which of the following is non-volatile memory?', opts:['RAM','ROM','Cache','Register'], ans:1, reason:'ROM retains data even without power supply.'},
+  {cat:'memory', q:'Volatile memory is also called:', opts:['Permanent memory','Temporary memory','Secondary memory','Optical memory'], ans:1, reason:'Volatile memory is temporary — its data is lost when power is turned off.'},
+  {cat:'memory', q:'Which memory stores data permanently?', opts:['RAM','ROM','CPU','Cache'], ans:1, reason:'ROM is non-volatile and stores data permanently.'},
+  {cat:'memory', q:'Which of the following is volatile?', opts:['Hard Disk','SSD','RAM','CD'], ans:2, reason:'RAM does not retain data after shutdown — it is volatile.'},
+  {cat:'memory', q:'Which of these is non-volatile storage?', opts:['RAM','Cache','ROM','Register'], ans:2, reason:'ROM keeps its contents permanently, even without power.'},
+  {cat:'memory', q:'Data in volatile memory is lost when:', opts:['Program ends','Power is off','File is saved','Printer is used'], ans:1, reason:'Volatile memory depends on power supply. Data is lost when power goes off.'},
+  {cat:'memory', q:'Which memory is used for temporary working storage?', opts:['ROM','RAM','Hard Disk','DVD'], ans:1, reason:'RAM stores data temporarily during processing.'},
+  {cat:'memory', q:'Which statement is correct?', opts:['RAM is non-volatile','ROM is volatile','RAM is volatile','Hard disk is volatile'], ans:2, reason:'RAM is volatile — it loses data when power is removed.'},
+  {cat:'memory', q:'Which memory is suitable for storing boot instructions?', opts:['RAM','ROM','Cache','Register'], ans:1, reason:'Boot instructions are stored in ROM — permanent, non-volatile memory.'},
+  // Operators
+  {cat:'operators', q:'What is the value of x after: int x=5; int y=++x;', opts:['5','6','7','Undefined'], ans:1, reason:'++x is prefix increment — x is increased to 6 before being assigned to y.'},
+  {cat:'operators', q:'What is the value of y after: int x=5; int y=x++;', opts:['5','6','4','Undefined'], ans:0, reason:'x++ is postfix — the original value (5) is assigned to y first, then x becomes 6.'},
+  {cat:'operators', q:'Which operator increases the value before using it?', opts:['Postfix increment','Prefix increment','Prefix decrement','Postfix decrement'], ans:1, reason:'Prefix increment (++i) increments the value first, then uses it.'},
+  {cat:'operators', q:'Which operator decreases the value after using it?', opts:['Prefix decrement','Prefix increment','Postfix decrement','Postfix increment'], ans:2, reason:'Postfix decrement (i--) uses the original value first, then decrements.'},
+  {cat:'operators', q:'What is the value of x after: int x=10; x--;', opts:['9','10','11','0'], ans:0, reason:'x-- decrements x by 1, so x becomes 9.'},
+  {cat:'operators', q:'In int a=4; int b=--a; what is the value of b?', opts:['4','3','5','0'], ans:1, reason:'Prefix decrement: a is decremented to 3 first, then assigned to b. So b = 3.'},
+  {cat:'operators', q:'Which of the following is postfix increment?', opts:['++i','i++','--i','i--'], ans:1, reason:'In postfix increment (i++), the operator comes after the variable.'},
+  {cat:'operators', q:'Which of the following is prefix decrement?', opts:['--i','i--','++i','i++'], ans:0, reason:'In prefix decrement (--i), the operator comes before the variable.'},
+  {cat:'operators', q:'printf("%d", a++); where a=5. Output?', opts:['4','5','6','Error'], ans:1, reason:'Postfix increment prints the current value (5) first, then increments a to 6.'},
+  {cat:'operators', q:'printf("%d", ++a); where a=5. Output?', opts:['5','4','6','Error'], ans:2, reason:'Prefix increment increases a to 6 first, then prints 6.'},
+  // Misc
+  {cat:'misc', q:'MS Excel is _____', opts:['an operating system','a processing device','an application software','none of these'], ans:2, reason:'MS Excel is an application software used for spreadsheets and data analysis.'},
+];
+
+let scores = {};
+let answered = {};
+
+function renderMCQs(filter = 'all') {
+  const container = document.getElementById('mcq-container');
+  container.innerHTML = '';
+  mcqData.forEach((q, i) => {
+    if (filter !== 'all' && q.cat !== filter) return;
+    const div = document.createElement('div');
+    div.className = 'mcq-item';
+    div.dataset.idx = i;
+    div.dataset.cat = q.cat;
+    const opts = q.opts.map((o, oi) => `<div class="mcq-opt${answered[i] !== undefined ? (oi === q.ans ? ' correct' : (oi === answered[i] ? ' wrong' : '')) : ''}" onclick="checkMCQ(${i}, ${oi}, this)">${String.fromCharCode(65+oi)}) ${o}</div>`).join('');
+    div.innerHTML = `
+      <div class="mcq-q"><span class="qnum">Q${i+1}.</span>${q.q}</div>
+      <div class="mcq-options">${opts}</div>
+      <div class="mcq-reason${answered[i] !== undefined ? ' show' : ''}" id="reason-${i}"><strong>✓ Answer: ${String.fromCharCode(65+q.ans)}) ${q.opts[q.ans]}</strong><br>${q.reason}</div>
+    `;
+    container.appendChild(div);
+  });
+  updateScore();
+}
+
+function checkMCQ(qi, optIdx, el) {
+  if (answered[qi] !== undefined) return;
+  answered[qi] = optIdx;
+  const q = mcqData[qi];
+  const item = el.closest('.mcq-item');
+  const opts = item.querySelectorAll('.mcq-opt');
+  opts.forEach((o, i) => {
+    if (i === q.ans) o.classList.add('correct');
+    else if (i === optIdx) o.classList.add('wrong');
+  });
+  const reason = document.getElementById('reason-' + qi);
+  if (reason) reason.classList.add('show');
+  if (optIdx === q.ans) scores[qi] = 1;
+  updateScore();
+}
+
+function updateScore() {
+  const total = Object.keys(answered).length;
+  const correct = Object.values(scores).reduce((a,b) => a+b, 0);
+  document.getElementById('score-display').textContent = correct + ' / ' + total;
+}
+
+function resetMCQs() {
+  answered = {}; scores = {};
+  const active = document.querySelector('.filter-btn.active');
+  const filter = active ? active.dataset.filter || 'all' : 'all';
+  renderMCQs(filter);
+}
+
+function filterMCQ(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  btn.dataset.filter = filter;
+  renderMCQs(filter);
+}
+
+renderMCQs();
+</script>
+</body>
+</html>
